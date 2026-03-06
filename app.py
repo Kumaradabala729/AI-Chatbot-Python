@@ -1,16 +1,18 @@
 from flask import Flask, render_template, request, jsonify
+import openai
 
 app = Flask(__name__)
 
+openai.api_key = "proj-RJ11Us6I_dC6FbyZ0Bvsi3OmqXXpHqBrY52QTOB-eO7fRKWN36syY39aCcAl6tzHWeUIpgYpu4T3BlbkFJOEakZffSu4QVG0XVrxdp_VrS67-CbWNyy2yDdzpF_-nup9TZAb5tUX0BttTiY1Qp4FrDttrOoA"
+
 def chatbot_response(user_input):
-    if "hello" in user_input.lower():
-        return "Hello! How can I help you?"
-    elif "your name" in user_input.lower():
-        return "I am a Python AI chatbot."
-    elif "bye" in user_input.lower():
-        return "Goodbye! Have a nice day."
-    else:
-        return "Sorry, I did not understand."
+
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role":"user","content":user_input}]
+    )
+
+    return response.choices[0].message.content
 
 @app.route("/")
 def home():
@@ -23,4 +25,4 @@ def chat():
     return jsonify({"reply": reply})
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(debug=True)
